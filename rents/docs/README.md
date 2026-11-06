@@ -11,7 +11,7 @@ Estimate weekly rent for 65,777 City of Sydney flats (33 suburbs), with and with
 - Deliverables: `rents_<team>.csv` (`gnaf_id`, `rent_with_car_space`, `rent_without_car_space`; all 65,777 ids, no extras, no blanks) and `report.html` (insights first, then held-out median abs error + R², date-split method, data and method).
 - Scoring: median absolute $ error on 1,699 adverts dated 1 Aug–30 Sep 2026; tie-break = share within $100. Baseline: $86 error, 55.21% within $100. Blank answers score worse than wrong ones.
 - Constraints: use only information dated by **31 Jul 2026**. Never use later adverts to build or tune. `listings/for-rent` is forbidden. Private files (past leases, census blocks) are day-of only and must not be republished.
-- Files go in at **11am Sat 7 Nov**; submission channel not stated – ask organisers.
+- Files + key arrive **11:00 Sat 7 Nov; submission deadline 15:00** (confirmed by the user; the task page only says files are sent at 11am). Submission channel not stated – ask organisers. Full schedule: `PLAN.md`; everything else: `../wiki/index.md`.
 
 ## API essentials
 - Base `https://api-ht.microburbs.com.au`; header `Authorization: Bearer $MICROBURBS_API_KEY` (or `X-Api-Key`). Key is issued on the day. Free. `GET /v1/me` checks the key.
@@ -26,8 +26,21 @@ Per-flat = 65,777 calls ≈ 110 min per endpoint at 10 req/s. Prefer suburb endp
 3. Per-flat `rent-history` / `history/all` / `basics/all` only for gaps. Cache everything to disk; retry 429.
 4. Suburb context: `market/median-rent-series`, `rent-map`, `vacancy-rate`, `bedroom-stats`, `yield-pct`. Check each series' dates and cut at 31 Jul.
 
+## Response shapes (from the spec's examples)
+- Suburb `listings/rent-history` → `data: {area_name, meta:{limit,offset,returned,total}, results:[{address, bathrooms, bedrooms, car_spaces, gnaf_pid, lat, lng, leased, listing_date, property_type, weekly_rent}]}`. The spec's example row is dated 2026-10-28: the endpoint DOES return post-cutoff adverts unless you send `to_date`.
+- Suburb `properties` → same envelope; rows have `address, bathrooms, bedrooms, car_spaces, dwelling_type, flats_in_building, floor, gnaf_pid, lat, lng, level, mb, property_type`.
+- Per-flat `rent-history` → `data: [{date, price?, type:"For Rent", address}]` (price can be missing).
+
+## Fetcher (`rents/fetcher.py`, tested in `rents/test_fetcher.py`)
+Run from the repo root with the key in `.env` / env (`MICROBURBS_API_KEY`):
+```
+python rents/fetcher.py adverts       # -> rents/data/adverts_<suburb>.jsonl  (to_date=2026-07-31 always)
+python rents/fetcher.py properties    # -> rents/data/properties_<suburb>.jsonl
+python rents/fetcher.py flats ids.txt # -> rents/data/flat_rent_history.jsonl (gap fill, one gnaf_id per line)
+```
+Rate-limited (8 req/s default, `--rate`), SQLite-cached in `rents/cache/` (re-runs and crashes resume free), retries 429/5xx via the quickstart client, raises `LeakageError` for any `to_date` after 31 Jul 2026 and drops rows dated after it. Tests: `cd rents && python -m pytest -q` (19 pass, no network).
+
 ## Open questions
-- Exact advert field names (spec has descriptions, not response schemas) – look at the first real response.
 - Whether suburb-level `listings/rent-history` is acceptable for the leaderboard run – confirm with organisers.
 
 ## Plan

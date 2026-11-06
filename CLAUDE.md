@@ -2,8 +2,10 @@
 
 Demo apps for the Microburbs hackathon API (`fastapi-property-report`, `nextjs-suburb-map`, `python-quickstart`, `streamlit-property-explorer`) plus the rent-prediction task in `rents/`.
 
-## Rent task (hackathon day: Sat 7 Nov 2026, files due 11am)
-Read `rents/docs/README.md` first: task rules, API essentials, bulk-fetch plan, open questions. The full API spec is saved at `rents/docs/openapi.json` (parse with Python, `encoding='utf-8'`).
+## Rent task (hackathon day: Sat 7 Nov 2026; files + API key arrive 11:00, SUBMIT BY 15:00)
+**Read `rents/wiki/index.md` first** (wiki-style memory of all discussion and decisions: task rules, schedule, API, fetching, data/geography, modelling, validation, SHAP, report + heat map, repo/environment, decisions-and-corrections, open-questions, glossary). Read the pages relevant to the current step; read `rents/wiki/decisions-and-corrections.md` to avoid repeating past mistakes. When anything changes or is learned, update the relevant wiki page AND append to `decisions-and-corrections.md`. Short schedule: `rents/docs/PLAN.md`. API notes: `rents/docs/README.md`. Full API spec: `rents/docs/openapi.json` (parse with Python, `encoding='utf-8'`).
+
+Key facts (details in the wiki): freeze modelling 14:15, submit by 14:45; safety baseline CSV committed by ~12:15; recommended model = LightGBM on log rent (L1/Huber), baseline first; date split (build < 1 Jun, check 1 Jun-31 Jul) and NO tuning on the check pile; report leads with insights; heat map (OpenStreetMap + filters + median/mean) only after/parallel to submission; ask organisers about submission channel and retraining on the check pile; the input CSV has 33 suburbs vs 29 in the API.
 
 Hard rules:
 - Use only information dated by **31 Jul 2026**. Never use adverts after that to build or tune. Never use `listings/for-rent`.
@@ -17,5 +19,7 @@ API:
 - Prefer suburb-level bulk endpoints (`listings/rent-history` with `to_date=2026-07-31`, `properties`) over per-flat calls (65,777 calls ≈ 110 min per endpoint).
 - `data: null` with HTTP 200 means no data; handle it.
 - Suburb names must be exact SAL names (e.g. `Glebe (NSW)`); use `/v1/geocode/suburb`.
+
+Fetcher: `rents/fetcher.py` (cached, rate-limited, leakage-guarded; usage in `rents/docs/README.md`). Tests: `cd rents && python -m pytest -q`. Advert rows: `gnaf_pid, weekly_rent, listing_date, bedrooms, bathrooms, car_spaces, leased, lat, lng`.
 
 Reference doc: https://claude.ai/artifact/AV1YQ6NgxrooHnKmq6wVWc
