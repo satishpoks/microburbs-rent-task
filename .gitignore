@@ -24,3 +24,7 @@ next-env.d.ts
 
 # Vercel
 .vercel/
+
+# Rent task: private day-of data and cached API responses
+rents/data/
+rents/cache/
