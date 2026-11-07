@@ -28,3 +28,9 @@ next-env.d.ts
 # Rent task: private day-of data and cached API responses
 rents/data/
 rents/cache/
+
+# G-NAF reference download (2.5 GB, never commit)
+Additional Data/
+
+# Rent task: private day-of files (past leases, input flats, census blocks) and notebooks with their outputs
+main_data/
