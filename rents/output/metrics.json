@@ -1,0 +1,23 @@
+{
+  "build_end": "2026-06-01",
+  "check_window": "2026-06-01..2026-07-31",
+  "n_build": 106888,
+  "n_check_scored": 2713,
+  "baseline_median": {
+    "median_abs_error": 90.0,
+    "within_100": 0.5845927018061187,
+    "r2": 0.7175440604955041,
+    "n": 2713
+  },
+  "lightgbm_v1": {
+    "median_abs_error": 46.52424055222775,
+    "within_100": 0.7828971618134906,
+    "r2": 0.8849261868776346,
+    "n": 2713
+  },
+  "winner": "lightgbm_v1",
+  "organiser_baseline": {
+    "median_abs_error": 86,
+    "within_100": 0.5521
+  }
+}
