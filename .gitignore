@@ -1,35 +1,29 @@
-# Secrets: never commit a real key
+# Supplied hackathon files (private, day-of only: must not be republished)
+data/
+main_data/
+Additional Data/
+
+# Intermediate model outputs (regenerate with src/)
+results/baseline_median.csv
+results/lightgbm_*.csv
+results/split_*/
+
+# Secrets (the final model does not call the API, but never commit a key)
 .env
 .env.*
-!.env.example
 
-# Python
+# Python / notebooks
 __pycache__/
-.venv/
 *.pyc
 .ipynb_checkpoints/
-.streamlit/secrets.toml
 
-# Node
-node_modules/
-.next/
-out/
-*.tsbuildinfo
-next-env.d.ts
+# Old working folders kept locally until closed in the editor
+rents/
 
-# OS / editors
+# Editors / OS / tooling
 .DS_Store
 .vscode/
 .idea/
-
-# Vercel
 .vercel/
-
-# Rent task: private day-of data and cached API responses
-rents/data/
-rents/cache/
-
-# G-NAF reference download (2.5 GB, never commit)
-
-# TODO REVERT (7 Nov): main_data/ and Additional Data/ were removed from this file on request, so they currently show as untracked.
-# Do NOT run `git add .` or `git add -A`. Re-add these two lines when done:  main_data/   Additional Data/
+.claude/
+CLAUDE.md

@@ -1,6 +1,0 @@
-[client]
-# Hide the developer menu (Deploy, Rerun...) from visitors.
-toolbarMode = "viewer"
-
-[theme]
-primaryColor = "#2563eb"

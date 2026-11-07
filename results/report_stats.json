@@ -1,0 +1,97 @@
+{
+  "check": {
+    "n": 2713,
+    "median_abs_error": 44.1,
+    "within_100": 79.2,
+    "r2": 0.888,
+    "buckets": {
+      "0-50": 1476,
+      "50-100": 672,
+      "100-200": 415,
+      "200+": 150
+    },
+    "median_signed_pct": 0.7
+  },
+  "check_by_parking": {
+    "with car space": {
+      "n": 1488,
+      "median_abs_error": 50.5,
+      "within_100": 74.5
+    },
+    "without car space": {
+      "n": 1225,
+      "median_abs_error": 37.9,
+      "within_100": 84.8
+    }
+  },
+  "check_by_beds": {
+    "0": {
+      "n": 230,
+      "median_abs_error": 30.2,
+      "within_100": 95.2
+    },
+    "1": {
+      "n": 1194,
+      "median_abs_error": 35.9,
+      "within_100": 85.8
+    },
+    "2": {
+      "n": 1094,
+      "median_abs_error": 55.7,
+      "within_100": 73.9
+    },
+    "3": {
+      "n": 183,
+      "median_abs_error": 97.0,
+      "within_100": 50.8
+    }
+  },
+  "split": {
+    "n_build": 106888,
+    "build_from": "2012-01-04",
+    "build_to": "2026-05-31",
+    "n_check_all": 2784,
+    "check_from": "2026-06-01",
+    "check_to": "2026-07-31",
+    "n_leases_raw_rows": 112457,
+    "n_dropped_flagged": 2785
+  },
+  "parking": {
+    "window": "2025-06-01 to 2026-05-31",
+    "groups": 53,
+    "median_premium": 98.0,
+    "median_premium_pct": 12.9,
+    "share_groups_positive": 92.0,
+    "adverts": 13610
+  },
+  "parking_1bed": [
+    {
+      "suburb": "Sydney",
+      "no_car": 825,
+      "with_car": 900,
+      "n_no": 442,
+      "n_with": 131
+    },
+    {
+      "suburb": "Surry Hills",
+      "no_car": 750,
+      "with_car": 815,
+      "n_no": 320,
+      "n_with": 183
+    },
+    {
+      "suburb": "Zetland",
+      "no_car": 850,
+      "with_car": 860,
+      "n_no": 296,
+      "n_with": 113
+    },
+    {
+      "suburb": "Darlinghurst",
+      "no_car": 675,
+      "with_car": 890,
+      "n_no": 293,
+      "n_with": 95
+    }
+  ]
+}
