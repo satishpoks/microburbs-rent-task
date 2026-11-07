@@ -16,7 +16,10 @@
 - **R squared** = 1 - SS_residual / SS_total (share of variation in weekly rent explained; 1 perfect, 0 = no better than predicting the mean). Report on the check pile.
 - Compare against the $86 / 55.21% baseline and against your own suburb-median baseline.
 
-## Open ambiguity: retraining on the check pile
+## RESOLVED (7 Nov, user): do NOT retrain on the check pile
+The user confirmed the rules say no retraining on the 1 Jun-31 Jul adverts. Final model = build pile only (adverts before 1 Jun 2026). Do not raise this with the organisers again. The old note below is kept for history.
+
+## (Old) open ambiguity: retraining on the check pile
 After measuring accuracy, may we retrain on the 1 Jun - 31 Jul adverts before predicting Aug-Sep? Wording ("never use those later adverts while building or tuning") suggests NO. Safe default: do not retrain on the check pile; ask organisers. If allowed, retraining on all data <= 31 Jul usually helps (most recent rents). Decide BEFORE 13:45 and state it in the report.
 
 ## "Test" clarified

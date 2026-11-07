@@ -30,3 +30,5 @@ Memory of everything decided and learned while preparing for the Microburbs hack
 8. **Never commit or print the API key.** It lives in `.env` (`MICROBURBS_API_KEY`).
 9. `report.html` must **lead with insights**, then held-out score, R squared, the date-split explanation, data and method.
 10. **Ask the organisers** the open questions (submission channel, retrain-on-check-pile) as early as possible.
+
+> **OPEN TODO (7 Nov): `main_data/` and `Additional Data/` are temporarily NOT in `.gitignore`. Revert before any `git add`/push. See repo-and-environment.md and decisions-and-corrections.md #27.**

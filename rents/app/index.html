@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sydney Rent Estimator</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --ink:#14181f; --muted:#5b6575; --line:#e3e7ee; --accent:#2563eb; --accent-soft:#dbe7ff; --good:#16803c; --warn:#b45309; --bar:#c3c7d0; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0e1116; --card:#171b22; --ink:#e8ecf3; --muted:#9aa5b5; --line:#2a313c; --accent:#6ea0ff; --accent-soft:#1e2b47; --good:#4cc27c; --warn:#e5a04b; --bar:#3a4250; } }
+  * { box-sizing: border-box; }
+  body { margin:0; font:15px/1.45 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; background:var(--bg); color:var(--ink); }
+  header { padding:18px 20px 6px; max-width:1280px; margin:0 auto; }
+  h1 { margin:0; font-size:22px; } .sub { color:var(--muted); font-size:13px; margin-top:2px; }
+  main { max-width:1280px; margin:0 auto; padding:12px 16px 40px; display:grid; grid-template-columns:330px 1fr; gap:16px; }
+  @media (max-width: 900px) { main { grid-template-columns:1fr; } }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 16px; }
+  .card h2 { margin:0 0 10px; font-size:14px; letter-spacing:.02em; color:var(--muted); text-transform:uppercase; font-weight:600; }
+  .tabs { display:flex; gap:6px; margin-bottom:12px; } .tabs button { flex:1; padding:8px 6px; border:1px solid var(--line); background:var(--bg); color:var(--ink); border-radius:8px; cursor:pointer; font:inherit; }
+  .tabs button.on { background:var(--accent); color:#fff; border-color:var(--accent); }
+  label { display:block; font-size:12px; color:var(--muted); margin:10px 0 4px; }
+  select, input[type=text] { width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:8px; background:var(--bg); color:var(--ink); font:inherit; }
+  .seg { display:flex; gap:4px; flex-wrap:wrap; } .seg button { padding:6px 10px; border:1px solid var(--line); background:var(--bg); color:var(--ink); border-radius:999px; cursor:pointer; font:inherit; font-size:13px; }
+  .seg button.on { background:var(--accent-soft); border-color:var(--accent); color:var(--accent); font-weight:600; }
+  .hide { display:none !important; } .hint { font-size:12px; color:var(--muted); margin-top:6px; }
+  #suggest { list-style:none; margin:4px 0 0; padding:0; border:1px solid var(--line); border-radius:8px; max-height:260px; overflow:auto; background:var(--card); }
+  #suggest li { padding:8px 10px; cursor:pointer; border-bottom:1px solid var(--line); font-size:13px; } #suggest li:last-child { border-bottom:0; } #suggest li:hover { background:var(--accent-soft); }
+  .result { display:grid; grid-template-columns:1.2fr 1fr; gap:16px; align-items:start; } @media (max-width:700px) { .result { grid-template-columns:1fr; } }
+  .big { font-size:46px; font-weight:700; line-height:1.05; } .big small { font-size:16px; font-weight:500; color:var(--muted); }
+  .range { margin-top:6px; color:var(--muted); } .range b { color:var(--ink); }
+  .kv { display:grid; grid-template-columns:auto 1fr; gap:4px 12px; font-size:14px; } .kv span:nth-child(odd) { color:var(--muted); }
+  .pill { display:inline-block; padding:2px 9px; border-radius:999px; font-size:12px; font-weight:600; } .pill.High { background:#dcf5e5; color:#14663a; } .pill.Medium { background:#fdf0d5; color:#8a5a00; } .pill.Low { background:#fde2e2; color:#a12727; }
+  .notice { margin-top:10px; padding:8px 10px; border-radius:8px; background:var(--accent-soft); font-size:13px; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px; } @media (max-width:900px) { .grid2 { grid-template-columns:1fr; } }
+  #map { height:340px; border-radius:8px; border:1px solid var(--line); } .nomap { height:340px; display:flex; align-items:center; justify-content:center; color:var(--muted); border:1px dashed var(--line); border-radius:8px; text-align:center; padding:20px; }
+  table { width:100%; border-collapse:collapse; font-size:13px; } th, td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--line); } th { color:var(--muted); font-weight:600; } td.r, th.r { text-align:right; } tr.click { cursor:pointer; } tr.click:hover { background:var(--accent-soft); }
+  svg text { fill:var(--ink); font:11px system-ui, sans-serif; } svg .mut { fill:var(--muted); }
+  .rank { max-height:420px; overflow:auto; }
+  footer { max-width:1280px; margin:0 auto; padding:0 16px 30px; color:var(--muted); font-size:12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Sydney Rent Estimator</h1>
+  <div class="sub" id="subtitle">Weekly rent estimates from the d4data model for City of Sydney flats</div>
+</header>
+<main>
+  <section class="card" id="filters">
+    <div class="tabs"><button id="tabFind" class="on">Find my flat</button><button id="tabDescribe">Describe a property</button></div>
+
+    <div id="paneFind">
+      <label for="q">Search your address</label>
+      <input type="text" id="q" placeholder="e.g. 12 Shirley Street Alexandria" autocomplete="off">
+      <ul id="suggest" class="hide"></ul>
+      <div class="hint">Gets our model's prediction for that exact flat.</div>
+    </div>
+
+    <div id="paneDescribe" class="hide">
+      <label for="suburb">Suburb</label><select id="suburb"></select>
+      <label>Property type</label><div class="seg" id="segType"></div>
+      <label>Bedrooms</label><div class="seg" id="segBeds"></div>
+      <label>Bathrooms</label><div class="seg" id="segBaths"></div>
+      <label>Floor level</label><div class="seg" id="segFloor"></div>
+      <label>Building size</label><div class="seg" id="segSize"></div>
+      <label>Search radius (click the map to set the centre)</label><div class="seg" id="segRadius"></div>
+      <div class="hint" id="centerNote">No map point chosen.</div>
+    </div>
+
+    <label>Parking</label><div class="seg" id="segParking"></div>
+    <div class="hint">Estimates are for the Aug-Sep 2026 market.</div>
+  </section>
+
+  <section>
+    <div class="card" id="resultCard"><div class="result"><div><div class="big">&nbsp;</div></div></div></div>
+    <div class="grid2">
+      <div class="card"><h2>Where this sits among similar flats</h2><div id="chartHist"></div></div>
+      <div class="card"><h2>Rent by bedrooms in this suburb</h2><div id="chartBeds"></div></div>
+    </div>
+    <div class="grid2">
+      <div class="card"><h2>Rent heat map and comparable flats</h2>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:8px"><div class="seg" id="segLayer"></div><div class="seg" id="segCell"></div></div>
+        <div id="mapWrap"><div id="map"></div></div><div id="legend" style="margin-top:8px"></div><div class="hint" id="mapHint"></div></div>
+      <div class="card"><h2>Suburbs compared (same type and bedrooms)</h2><div id="chartRank" class="rank"></div></div>
+    </div>
+    <div class="card" style="margin-top:16px"><h2 id="compTitle">Comparable flats</h2><div id="comps"></div></div>
+  </section>
+</main>
+<footer id="foot"></footer>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="data.js"></script>
+<script src="core.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

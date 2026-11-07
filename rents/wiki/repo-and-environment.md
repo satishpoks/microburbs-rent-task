@@ -24,3 +24,6 @@
 ## Tools/connectors notes
 - Claude-in-Chrome extension was "not connected" (needs extension installed/enabled, logged into claude.ai, Chrome restart). Not needed now: the spec is saved locally.
 - GitHub MCP server failed to connect (auth header); use the `gh` CLI (logged in as `satishpoks`).
+
+## TEMPORARY: data folders are NOT gitignored right now (7 Nov) - REVERT LATER
+`main_data/` (private day-of CSVs) and `Additional Data/` (G-NAF 2.5 GB + task5-valuation) were removed from `.gitignore` on request. Stage by explicit path only (never `git add .` / `-A`). Revert = put `main_data/` and `Additional Data/` back into `.gitignore`, then check `git ls-files main_data "Additional Data"` prints nothing. See decisions-and-corrections.md #27.

@@ -30,7 +30,6 @@ rents/data/
 rents/cache/
 
 # G-NAF reference download (2.5 GB, never commit)
-Additional Data/
 
-# Rent task: private day-of files (past leases, input flats, census blocks) and notebooks with their outputs
-main_data/
+# TODO REVERT (7 Nov): main_data/ and Additional Data/ were removed from this file on request, so they currently show as untracked.
+# Do NOT run `git add .` or `git add -A`. Re-add these two lines when done:  main_data/   Additional Data/
